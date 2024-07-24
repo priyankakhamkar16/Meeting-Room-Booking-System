@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Room Booking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: rgb(250, 247, 247);
+        }
+        .navbar {
+            background-color: black;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            font-size: 35px;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        .form-container h2 {
+            text-align: center;
+        }
+        .form-container form {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-container input, .form-container select, .form-container button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .booked-meetings {
+            margin-top: 20px;
+            text-align: center;
+           
+        }
+        .meeting {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: black;
+            color: white;
+        }
+        #bookingForm {
+           height: 500px ;
+           width: 500px;
+           float: right;
+           background-color: white;
+        }
+        #availableRoomsForm {
+            height: 500px;
+            width: 500px;
+            background-color: white;
+          
+        }
+        .h {
+            height: 3px;
+            width: 100% ;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        Meeting Room Booking System
+    </div>
+
+    <div class="form-container">
+        <form id="bookingForm">
+            <h2>Book a Room</h2>
+            <hr class="h">
+            <label for="roomType">Room Type:</label>
+            <select id="roomType" required>
+                <option value="Conference">Conference Room</option>
+                <option value="Meeting">Meeting Room</option>
+                <option value="Board">Board Room</option>
+            </select>
+            <label for="date">Date:</label>
+            <input type="date" id="date" required>
+
+            <label for="startTime">Start Time:</label>
+            <input type="time" id="startTime" required>
+
+            <label for="endTime">End Time:</label>
+            <input type="time" id="endTime" required>
+
+            
+            <label for="meetingTitle">Meeting Title:</label>
+            <input type="text" id="meetingTitle" required>
+
+            <button type="button" onclick="bookRoom()">Book Room</button>
+        </form>
+
+        <form id="availableRoomsForm">
+            <h2>Available Rooms</h2>
+            <hr class="h">
+            <div>
+                <label>Conference Room A Capacity:</label>
+                <span id="conferenceCapacity">10</span>
+            </div>
+            <div>
+                <label>Meeting Room B Capacity:</label>
+                <span id="meetingCapacity">3</span>
+            </div>
+            <div>
+                <label>Board Room Capacity:</label>
+                <span id="boardCapacity">5</span>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="booked-meetings">
+        <h2>Booked Meetings</h2>
+        <div id="bookedMeetingsList"></div>
+    </div>
+
+    <script>
+        const initialCapacities = {
+            Conference: 10,
+            Meeting: 3,
+            Board: 5
+        };
+
+        let availableRooms = { ...initialCapacities };
+
+        function updateAvailableRooms() {
+            document.getElementById('conferenceCapacity').innerText = availableRooms.Conference;
+            document.getElementById('meetingCapacity').innerText = availableRooms.Meeting;
+            document.getElementById('boardCapacity').innerText = availableRooms.Board;
+        }
+
+        function bookRoom() {
+            const roomType = document.getElementById('roomType').value;
+            const meetingTitle = document.getElementById('meetingTitle').value;
+            const date = document.getElementById('date').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+
+            if (availableRooms[roomType] > 0) {
+                availableRooms[roomType]--;
+                updateAvailableRooms();
+                addBookedMeeting(roomType, meetingTitle, date, startTime, endTime);
+            } else {
+                alert(`No available ${roomType} rooms left.`);
+            }
+        }
+
+        function addBookedMeeting(roomType, meetingTitle, date, startTime, endTime) {
+            const meetingList = document.getElementById('bookedMeetingsList');
+            const meetingDiv = document.createElement('div');
+            meetingDiv.className = 'meeting';
+            meetingDiv.innerHTML = `<strong>${roomType}:</strong> ${meetingTitle}<br>Date: ${date}<br>Time: ${startTime} - ${endTime}`;
+            meetingList.appendChild(meetingDiv);
+        }
+
+        updateAvailableRooms();
+    </script>
+</body>
+</html>
